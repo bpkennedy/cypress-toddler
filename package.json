@@ -1,5 +1,5 @@
 {
-  "name": "toddler",
+  "name": "cypress-toddler",
   "version": "1.0.0",
   "description": "Hostile testing plugin for cypress; QA like an angry toddler",
   "main": "dist/index.js",
@@ -7,15 +7,21 @@
     "node": ">=12.11.10"
   },
   "scripts": {
-    "cypress:serve": "serve --listen 8080 ./cypress/fixtures/test-app",
+    "build": "babel src --out-file dist/index.js",
+    "lint": "eslint src && eslint cypress/integration/**/*.spec.js",
+    "dev": "npm-run-all --silent --parallel --race cypress:serve cypress:open",
+    "cypress:serve": "serve --listen 8080 cypress/fixtures/test-app",
     "cypress:run": "wait-port --timeout 10000 localhost:8080 && cypress run",
     "cypress:open": "cypress open",
     "test:cypress": "npm-run-all --silent --parallel --race cypress:serve cypress:run",
-    "dev": "npm-run-all --silent --parallel --race cypress:serve cypress:open"
+    "travis": "npm-run-all --parallel lint build test:cypress"
   },
   "devDependencies": {
-    "concurrently": "^5.0.0",
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
     "cypress": "^3.6.1",
+    "eslint": "^6.7.1",
     "npm-run-all": "^4.1.5",
     "serve": "^11.2.0",
     "wait-port": "^0.2.6"

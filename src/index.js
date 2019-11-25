@@ -2,8 +2,8 @@ const width = 800
 const height = 800
 const mouseClickCode = { left: 1, right: 3 }
 
-function randomIntFromInterval(min, max) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min);
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 const pageX = () => {
@@ -35,7 +35,7 @@ Cypress.Commands.add('randomMouseMove', (count) => {
   let X = pageX()
   let Y = pageY()
   cy.singleMouseMove(X, Y)
-  for (const m of Array(count).keys()) {
+  for (let m=0;m < count;m++) {
     X += 1
     Y += 1
     cy.singleMouseMove(X, Y)
@@ -55,6 +55,6 @@ Cypress.Commands.add('assertMouseCounts', (mouseEvents) => {
   cy.contains(`rightclickup:${mouseEvents[4]}`)
 })
 
-Cypress.Commands.add('toddle', { prevSubject: 'element' }, (element, options = {}) => {
+Cypress.Commands.add('toddle', { prevSubject: 'element' }, () => {
   console.log('tested....')
-});
+})
