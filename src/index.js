@@ -1,5 +1,5 @@
-const width = 800
-const height = 800
+const width = 500
+const height = 500
 const mouseClickCode = { left: 1, right: 3 }
 
 function randomIntFromInterval(min, max) {
