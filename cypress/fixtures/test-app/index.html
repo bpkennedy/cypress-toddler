@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <title>Test Cypress Toddler</title>
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      color: #343434;
+    }
+    #container {
+      width: 100%;
+      height: 100%;
+      background: #fafafa;
+    }
+    h1 {
+      text-align: center;
+    }
+  </style>
+  <script>
+    window.mousePosition = {}
+    window.firstMove = true
+    window.onload = function() {
+
+      document.getElementById('container').onmousedown = function(e) {
+        console.log(e)
+        if (e.which === 3) {
+          // right mouse down
+          window.increment('rightclickdown', e)
+        } else if (e.which === 2) {
+          // middle mouse down
+        } else if (e.which === 1) {
+          // left mouse down
+          window.increment('leftclickdown', e)
+        }
+        
+      }
+      document.getElementById('container').onmouseup = function(e) {
+        if (e.which === 3) {
+          // right mouse raised
+          window.increment('rightclickup', e)
+        } else if (e.which === 2) {
+          // middle mouse raised
+        } else if (e.which === 1) {
+          // left mouse raised
+          window.increment('leftclickup', e)
+        }
+      }
+      document.getElementById('container').onmousemove = function(e) {
+        if (firstMove) {
+          mousePosition.x = e.clientX
+          mousePosition.y = e.clientY
+          firstMove = false
+        }
+        if (e.clientX !== mousePosition.x || e.clientY !== mousePosition.y) {
+          window.increment('mousemove', e)
+        }
+      }
+    }
+    window.increment = function(elementId, e) {
+      document.getElementById(elementId).innerHTML = parseInt(document.getElementById(elementId).innerHTML, 10) + 1
+      if (['rightclickup', 'rightclickdown', 'leftclickup', 'leftclickdown'].includes(elementId)) {
+        mousePosition = { x: e.clientX, y: e.clientY }
+      }
+    }
+    </script>
+</head>
+<body>
+  <div id="container">
+    <h1>Toddler</h1>
+    <p>
+      mousemove:<span id="mousemove">0</span>
+      leftclickdown:<span id="leftclickdown">0</span>
+      leftclickup:<span id="leftclickup">0</span>
+      rightclickdown:<span id="rightclickdown">0</span>
+      rightclickup:<span id="rightclickup">0</span>
+    </p>
+  </div>
+</body>
+</html>
