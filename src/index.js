@@ -44,7 +44,6 @@ Cypress.Commands.add('randomMouseMove', (count) => {
 
 Cypress.Commands.add('singleMouseMove', (posX = pageX(), posY = pageY()) => {
   cy.get('body').trigger('mousemove', posX, posY)
-  // cy.get('body').trigger('mousemove', posX + 1, posY + 1)
 })
 
 Cypress.Commands.add('assertMouseCounts', (mouseEvents) => {

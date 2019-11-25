@@ -3,7 +3,7 @@ describe('Mouse', () => {
     cy.setup()
   })
 
-  it.only('should track left click down/up and right click down/up', () => {
+  it('should track left click down/up and right click down/up', () => {
     cy.randomMouseDown('left')
     cy.assertMouseCounts([0,1,0,0,0])
 
@@ -18,10 +18,7 @@ describe('Mouse', () => {
   })
   
   it('should randomly move mouse by count', () => {
-    cy.singleMouseMove()
-    cy.assertMouseCounts([1,0,0,0,0])
-    
-    cy.randomMouseMove(11)
+    cy.randomMouseMove(10)
     cy.assertMouseCounts([10,0,0,0,0])
   })
 
