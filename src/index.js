@@ -1,5 +1,5 @@
-const width = 500
-const height = 500
+const width = Cypress.config('viewportWidth')
+const height = Cypress.config('viewportHeight')
 const mouseClickCode = { left: 1, right: 3 }
 
 function randomIntFromInterval(min, max) {
@@ -15,7 +15,7 @@ const pageY = () => {
 }
 
 Cypress.Commands.add('setup', () => {
-  cy.viewport(width, height)
+  cy.viewport(width + 50, height + 50)
   cy.visit('http://localhost:8080')
 })
 
@@ -36,8 +36,8 @@ Cypress.Commands.add('randomMouseMove', (count) => {
   let Y = pageY()
   cy.singleMouseMove(X, Y)
   for (let m=0;m < count;m++) {
-    X += 1
-    Y += 1
+    X += X + 1 < width ? 1 : 0
+    Y += X + 1 < height ? 1 : 0
     cy.singleMouseMove(X, Y)
   }
 })
