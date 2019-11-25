@@ -11,7 +11,7 @@
     "lint": "eslint src && eslint cypress/integration/**/*.spec.js",
     "dev": "npm-run-all --silent --parallel --race cypress:serve cypress:open",
     "cypress:serve": "serve --listen 8080 cypress/fixtures/test-app",
-    "cypress:run": "wait-port --timeout 10000 localhost:8080 && cypress run",
+    "cypress:run": "wait-port --timeout 10000 localhost:8080 && cypress run --browser chrome",
     "cypress:open": "cypress open",
     "test:cypress": "npm-run-all --silent --parallel --race cypress:serve cypress:run",
     "travis": "npm-run-all --parallel lint build test:cypress"
