@@ -24,7 +24,6 @@
     window.onload = function() {
 
       document.getElementById('container').onmousedown = function(e) {
-        console.log(e)
         if (e.which === 3) {
           // right mouse down
           window.increment('rightclickdown', e)
@@ -76,6 +75,7 @@
       rightclickdown:<span id="rightclickdown">0</span>
       rightclickup:<span id="rightclickup">0</span>
     </p>
+    <div id="editable" contentEditable="true"></div>
   </div>
 </body>
 </html>

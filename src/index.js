@@ -1,10 +1,8 @@
+import { randomAlphaNumSpecial, randomIntFromInterval } from './util'
+
 const width = Cypress.config('viewportWidth')
 const height = Cypress.config('viewportHeight')
 const mouseClickCode = { left: 1, right: 3 }
-
-function randomIntFromInterval(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
 
 const pageX = () => {
   return randomIntFromInterval(1, width)
@@ -19,31 +17,50 @@ Cypress.Commands.add('setup', () => {
   cy.visit('http://localhost:8080')
 })
 
-Cypress.Commands.add('randomMouseDown', (direction) => {
-  cy.get('body').trigger('mousedown',  pageX(), pageY(), { which: mouseClickCode[direction] })
+Cypress.Commands.add('mouseOver', { prevSubject: true }, subject => {
+  return subject.trigger('mouseover')
 })
 
-Cypress.Commands.add('randomMouseUp', (direction) => {
-  cy.get('body').trigger('mouseup',  pageX(), pageY(), { which: mouseClickCode[direction] })
+Cypress.Commands.add('mouseUp', { prevSubject: 'optional' }, (subject, direction) => {
+  if (subject) {
+    return subject.trigger('mouseup', { which: mouseClickCode[direction] })
+  }
+  return cy.get('body').trigger('mouseup', pageX(), pageY(), { which: mouseClickCode[direction] })
 })
 
-Cypress.Commands.add('mouseUp', (direction) => {
-  cy.get('body').trigger('mouseup',  { which: mouseClickCode[direction] })
+Cypress.Commands.add('mouseDown', { prevSubject: 'optional' }, (subject, direction) => {
+  if (subject) {
+    return subject.trigger('mousedown', { which: mouseClickCode[direction] })
+  }
+  return cy.get('body').trigger('mousedown',  pageX(), pageY(), { which: mouseClickCode[direction] })
 })
 
-Cypress.Commands.add('randomMouseMove', (count) => {
+Cypress.Commands.add('mouseMove', (steps) => {
   let X = pageX()
   let Y = pageY()
-  cy.singleMouseMove(X, Y)
-  for (let m=0;m < count;m++) {
-    X += X + 1 < width ? 1 : 0
-    Y += X + 1 < height ? 1 : 0
-    cy.singleMouseMove(X, Y)
+  cy.get('body').trigger('mousemove', X, Y)
+  for (let m=0; m < steps; m++) {
+    X += X + 20 < width ? 20 : 0
+    Y += X + 20 < height ? 20 : 0
+    cy.get('body').trigger('mousemove', X, Y)
   }
 })
 
-Cypress.Commands.add('singleMouseMove', (posX = pageX(), posY = pageY()) => {
-  cy.get('body').trigger('mousemove', posX, posY)
+Cypress.Commands.add('keyDown', { prevSubject: 'optional' }, (subject, count) => {
+  for (let i=0; i < count; i++) {
+    if (subject) {
+      cy.get(subject).type(randomAlphaNumSpecial(), { release: false })
+      continue
+    }
+    cy.get('body').type(randomAlphaNumSpecial(), { release: false })
+  }
+  return subject ? cy.get(subject) : cy.get('body')
+})
+
+Cypress.Commands.add('randomElement', () => {
+  const allElements = Cypress.$('body *')
+  const randomNumber = Math.floor(Math.random() * allElements.length)
+  return cy.get(allElements[randomNumber])
 })
 
 Cypress.Commands.add('assertMouseCounts', (mouseEvents) => {
@@ -54,6 +71,22 @@ Cypress.Commands.add('assertMouseCounts', (mouseEvents) => {
   cy.contains(`rightclickup:${mouseEvents[4]}`)
 })
 
-Cypress.Commands.add('toddle', { prevSubject: 'element' }, () => {
-  console.log('tested....')
+Cypress.Commands.add('toddle', { prevSubject: 'optional' }, (subject, options) => {
+  if (options.keypressCount) {
+    cy.keyDown(options.keypressCount)
+  }
+  if (options.leftMouseClicks) {
+    for (let j=0; j < options.leftMouseClicks; j++) {
+      cy.mouseDown('left')
+      cy.mouseMove(2)
+      cy.mouseUp()
+    }
+  }
+  if (options.rightMouseClicks) {
+    for (let j=0; j < options.rightMouseClicks; j++) {
+      cy.mouseDown('right')
+      cy.mouseMove(2)
+      cy.mouseUp()
+    }
+  }
 })
